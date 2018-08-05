@@ -1,0 +1,85 @@
+html {
+  box-sizing: border-box;
+  font-family: Helvetica, Verdana;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 50px 20px;
+  background-color: #f7fff7;
+}
+
+.container {
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: auto;
+  grid-auto-rows: 3em;
+  grid-auto-columns: 100px;
+}
+
+.line {
+  display: grid;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  border-radius: 3px;
+  font-size: 1em;
+  font-weight: bold;
+  background-color: paleturquoise;
+  grid-template-columns: repeat(5, 1fr) 50px;
+  grid-template-rows: auto;
+  grid-column-gap: 3px;
+}
+
+.header, .line input {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  min-width: 100px;
+  text-overflow: clip;
+  overflow: hidden;
+  padding: 5px;
+  margin-right: -1px;
+  margin-left: -1px;
+}
+
+.header:first-of-type, .line input:first-of-type {
+  margin-left: 0px;
+}
+
+.header:last-of-type, .line input:last-of-type {
+  margin-right: 0px;
+}
+
+.line input {
+  font-size: 2em;
+}
+
+.line button {
+  background-color: rgba(0, 0, 0, 0);
+  border: 1px solid rgba(52, 139, 133, 0.5);
+  border-radius: 4px;
+  font-size: 2em;
+  outline: none;
+  margin: 0;
+  padding: 0;
+  height: 46px;
+}
+
+.btn {
+  border: 2px solid rgb(78, 205, 196);
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0);
+  color: #4ecdc4;
+  min-width: 50px;
+  padding: 5px;
+  margin: 5px 5px 0 0;
+  outline: none;
+}
+
+.mi-clear {
+  color: rgba(52, 139, 133, 1);
+  font-size: 44px;
+}
