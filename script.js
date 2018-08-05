@@ -14,7 +14,7 @@ const lineDiv = function() {
   <input class="carbsFor100g" />
   <input class="weight" />
   <div class="totalWeight"></div>
-  <button><i class="material-icons mi-clear">clear</i></button>
+  <button class="removeLine"><i class="material-icons mi-clear">clear</i></button>
 </div>`;
   return div.firstElementChild.cloneNode(true);
 };
@@ -108,7 +108,7 @@ function clickOnPageHandler(e) {
     let newDiv = lineDiv();
     newDiv.dataset.number = ts;
     addNewLineOnPage(newDiv);
-  } else if (classList.contains('mi-clear')) {
+  } else if (classList.contains('removeLine') || e.target.parentNode.classList.contains('removeLine')) {
     removeLineFromPage(e.target.closest('.line'));
   } else if (classList.contains('btn')) {
 

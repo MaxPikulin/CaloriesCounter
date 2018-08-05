@@ -15,8 +15,8 @@ body {
 .container {
   display: grid;
   grid-gap: 5px;
-  grid-template-columns: auto;
-  grid-auto-rows: 3em;
+  grid-template-columns: 100%;
+  grid-auto-rows: 48px;
   grid-auto-columns: 100px;
 }
 
@@ -24,7 +24,7 @@ body {
   display: grid;
   border: 1px solid rgba(0, 0, 0, 0.03);
   border-radius: 3px;
-  font-size: 1em;
+  font-size: 0.7em;
   font-weight: bold;
   background-color: paleturquoise;
   grid-template-columns: repeat(5, 1fr) 50px;
