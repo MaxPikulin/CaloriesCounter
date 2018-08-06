@@ -10,20 +10,47 @@
 
 <body>
   <div class="container">
-    <div class="line">
+    <div class="head">
       <div class="header">Назва продукту</div>
       <div class="header">Калорійність на 100гр.</div>
       <div class="header">Вуглеводи на 100гр.</div>
       <div class="header">Вага г.</div>
+      <div class="header">Всього карбсів</div>
       <div class="header">Всього калорій</div>
+      <button class="menu"><i class="material-icons mi-menu">menu</i></button>
+      <!-- <div class="header menu"><i class="material-icons mi-menu">menu</i></div> -->
     </div>
-    <div class="line" data-number="3456">
+    <!-- <div class="line" data-number="3456">
       <input class="productName" />
       <input class="calFor100g" />
       <input class="carbsFor100g" />
       <input class="weight" />
       <div class="totalWeight"></div>
       <button class="removeLine"><i class="material-icons mi-clear">clear</i></button>
+    </div> -->
+  </div>
+  <div class="results">
+    <div class="resultRow">
+      <div class="resultColumn"></div>
+      <div class="resultColumn"></div>
+      <div class="resultColumn"></div>
+      <div class="resultColumn allWeight"></div>
+      <div class="resultColumn totalCarbs"></div>
+      <div class="resultColumn totalCals"></div>
+    </div>
+    <div class="resultRow">
+      <div class="resultColumn counting1"></div>
+      <div class="resultColumn invisible"></div>
+      <div class="resultColumn invisible"></div>
+      <div class="resultColumn invisible"></div>
+      <div class="resultColumn invisible"></div>
+    </div>
+    <div class="resultRow">
+      <div class="resultColumn counting2"></div>
+      <button class="resultColumn saveRecipe btn">Зберегти рецепт</button>
+      <div class="resultColumn invisible"></div>
+      <div class="resultColumn invisible"></div>
+      <div class="resultColumn invisible"></div>
     </div>
   </div>
   <button class="btn new-line">Додати ряд</button>

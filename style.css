@@ -14,49 +14,66 @@ body {
 
 .container {
   display: grid;
-  grid-gap: 5px;
+  grid-gap: 3px;
   grid-template-columns: 100%;
   grid-auto-rows: 48px;
   grid-auto-columns: 100px;
+  width: fit-content;
 }
 
-.line {
-  display: grid;
-  border: 1px solid rgba(0, 0, 0, 0.03);
+.container>* {
   border-radius: 3px;
-  font-size: 0.7em;
+}
+
+.line, .head {
+  display: grid;
+  /* border: 1px solid rgba(0, 0, 0, 0); */
+  border-radius: 3px;
   font-weight: bold;
-  background-color: paleturquoise;
-  grid-template-columns: repeat(5, 1fr) 50px;
+  grid-template-columns: 2fr 2fr 2fr 2fr 1fr 1fr 50px;
   grid-template-rows: auto;
   grid-column-gap: 3px;
+  /* background-color: paleturquoise; */
 }
 
 .header, .line input {
   display: grid;
   justify-content: center;
   align-items: center;
-  min-width: 100px;
+  min-width: 110px;
   text-overflow: clip;
   overflow: hidden;
   padding: 5px;
-  margin-right: -1px;
-  margin-left: -1px;
+  margin-right: 0px;
+  margin-left: 0px;
+  border: 1px solid rgb(78, 205, 196);
+  border-radius: 3px;
+}
+
+.head {
+  background-color: rgba(0, 0, 0, 0);
+  font-size: 17px;
+}
+
+.header {
+  background-color: paleturquoise;
+  border: 1px solid rgba(52, 139, 133, 0.5);
+  /* border-bottom: none; */
 }
 
 .header:first-of-type, .line input:first-of-type {
-  margin-left: 0px;
+  margin-left: 1px;
 }
 
 .header:last-of-type, .line input:last-of-type {
-  margin-right: 0px;
+  margin-right: -1px;
 }
 
-.line input {
-  font-size: 2em;
+.line input, .head input {
+  font-size: 1.4em;
 }
 
-.line button {
+.line button, .head button {
   background-color: rgba(0, 0, 0, 0);
   border: 1px solid rgba(52, 139, 133, 0.5);
   border-radius: 4px;
@@ -67,10 +84,20 @@ body {
   height: 46px;
 }
 
+.line>div {
+  background-color: #f7fff7;
+  border: 1px solid rgb(78, 205, 196);
+  border-radius: 3px;
+}
+
+.line>* {
+  min-width: 110px;
+}
+
 .btn {
   border: 2px solid rgb(78, 205, 196);
   border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+  box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, 0.8);
   background-color: rgba(0, 0, 0, 0);
   color: #4ecdc4;
   min-width: 50px;
@@ -79,7 +106,95 @@ body {
   outline: none;
 }
 
+.removeLine {
+  min-width: 10px;
+  background-color: #f7fff7 !important;
+  margin-top: 1px !important;
+}
+
+.new-line {
+  margin-top: 10px;
+}
+
 .mi-clear {
   color: rgba(52, 139, 133, 1);
   font-size: 44px;
+}
+
+button.menu {
+  margin-top: 1px;
+}
+
+.mi-menu {
+  color: rgba(52, 139, 133, 1);
+  font-size: 44px;
+  /* margin-top: 5px; */
+}
+
+.results {
+  display: grid;
+  grid-template-columns: 100%;
+  grid-auto-rows: 48px;
+  grid-auto-columns: 100px;
+  /* background-color: aliceblue; */
+  grid-row-gap: 3px;
+  margin-top: 3px;
+  /* width: fit-content; */
+  ;
+}
+
+.resultRow {
+  /* background-color: aquamarine; */
+  display: grid;
+  grid-template-columns: 2fr 2fr 2fr 2fr 1fr 1fr 50px;
+  grid-template-rows: auto;
+  grid-column-gap: 3px;
+  /* width: fit-content; */
+  border-radius: 3px;
+  font-weight: bold;
+  grid-template-columns: 2fr 2fr 2fr 2fr 1fr 1fr 50px;
+  grid-template-rows: auto;
+  grid-column-gap: 3px;
+}
+
+.resultColumn {
+  /* background-color: #f7fff7; */
+  border: 1px solid rgb(78, 205, 196);
+  border-radius: 3px;
+  grid-gap: 3px;
+  min-width: 110px;
+}
+
+.totalCarbs {
+  grid-column: 5/6;
+  min-width: 110px;
+}
+
+.totalCals {
+  min-width: 110px;
+}
+
+.allWeight {
+  grid-column: 4/5;
+}
+
+.counting1 {
+  grid-column: 1/4;
+  /* min-width: 330px; */
+  width: 400px;
+}
+
+.counting2 {
+  grid-column: span 3;
+  /* min-width: 330px; */
+  width: 400px;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.saveRecipe {
+  grid-column: 4/5;
+  width: 50px;
 }
