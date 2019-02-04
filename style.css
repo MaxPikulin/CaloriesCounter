@@ -69,7 +69,7 @@ body {
   margin-right: -1px;
 }
 
-.line input, .head input {
+.line input, .head input, .cookedWeight {
   font-size: 1.4em;
 }
 
@@ -77,11 +77,11 @@ body {
   background-color: rgba(0, 0, 0, 0);
   border: 1px solid rgba(52, 139, 133, 0.5);
   border-radius: 4px;
-  font-size: 2em;
+  /* font-size: 2em; */
   outline: none;
   margin: 0;
   padding: 0;
-  height: 46px;
+  /* height: 46px; */
 }
 
 .line>div {
@@ -92,6 +92,9 @@ body {
 
 .line>* {
   min-width: 110px;
+  display: grid;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn {
@@ -102,23 +105,27 @@ body {
   color: #4ecdc4;
   min-width: 50px;
   padding: 5px;
-  margin: 5px 5px 0 0;
+  /* margin: 5px 5px 0 0; */
   outline: none;
 }
 
 .removeLine {
   min-width: 10px;
   background-color: #f7fff7 !important;
-  margin-top: 1px !important;
+  /* margin-top: 1px !important; */
 }
 
 .new-line {
   margin-top: 10px;
 }
 
+.material-icons {
+  vertical-align: middle;
+}
+
 .mi-clear {
   color: rgba(52, 139, 133, 1);
-  font-size: 44px;
+  font-size: 46px;
 }
 
 button.menu {
@@ -152,9 +159,6 @@ button.menu {
   /* width: fit-content; */
   border-radius: 3px;
   font-weight: bold;
-  grid-template-columns: 2fr 2fr 2fr 2fr 1fr 1fr 50px;
-  grid-template-rows: auto;
-  grid-column-gap: 3px;
 }
 
 .resultColumn {
@@ -163,6 +167,10 @@ button.menu {
   border-radius: 3px;
   grid-gap: 3px;
   min-width: 110px;
+  align-items: center;
+  justify-content: center;
+  display: grid;
+  padding: 5px;
 }
 
 .totalCarbs {
@@ -179,13 +187,13 @@ button.menu {
 }
 
 .counting1 {
-  grid-column: 1/4;
+  /* grid-column: 1/4; */
   /* min-width: 330px; */
-  width: 400px;
+  width: 600px;
 }
 
 .counting2 {
-  grid-column: span 3;
+  /* grid-column: span 3; */
   /* min-width: 330px; */
   width: 400px;
 }
@@ -195,6 +203,11 @@ button.menu {
 }
 
 .saveRecipe {
-  grid-column: 4/5;
+  /* grid-column: 4/5; */
   width: 50px;
+  /* margin-bottom: 3px; */
+}
+
+.cookedLabel {
+  min-width: 160px;
 }
