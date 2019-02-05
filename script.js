@@ -1,254 +1,133 @@
-/* Рахівник калорійності страв 2.0
-Визначити які функції знадобляться
-*/
-
-//При завантаженні сторінки або оновлені - заповнювати поля останнім рецептом.
 //vars
+const allWeightDiv = document.querySelector('.allWeight');
+const allCalsDiv = document.querySelector('.allCals');
+const allCarbsDiv = document.querySelector('.allCarbs');
 const container = document.querySelector('.container');
-const linesLive = document.getElementsByClassName('line');
-const results = document.getElementById('results');
-const resultsData = results.dataset;
+let lines = document.querySelectorAll('.line');
+const results = document.querySelector('#results');
 const cookedWeightInput = document.querySelector('.cookedWeight');
-const lineDiv = function() {
+const lineDiv = function (ts= '', nm = '', kc = '', cb = '', wt = '', ttcb = '', ttkc = '') {
   let div = document.createElement('div');
   div.innerHTML =
-`<div class="line">
-  <input class="productName" />
-  <input class="calsFor100g" />
-  <input class="carbsFor100g" />
-  <input class="weight" />
-  <div class="totalCarbs"></div>
-  <div class="totalCals"></div>
-  <button class="removeLine"><i class="material-icons mi-clear">clear</i></button>
+    `<div class="line" data-ts="${ts}">
+<input class="productName" value="${nm}"/>
+<input class="calsFor100g" value="${kc}"/>
+<input class="carbsFor100g" value="${cb}"/>
+<input class="weight" value="${wt}"/>
+<div class="totalCarbs">${ttcb}</div>
+<div class="totalCals">${ttkc}</div>
+<button class="removeLine"><i class="material-icons mi-clear">clear</i></button>
 </div>`;
-  return div.firstElementChild.cloneNode(true);
+  div = div.firstElementChild.cloneNode(true);
+  return div;
 };
-let currentRecipe = {};
+let userData = {};
+let calculations = {};
 
 function loadLastFromStorage() {
-  currentRecipe = JSON.parse(localStorage.getItem('ccLastRecipe'));
+  userData = JSON.parse(localStorage.getItem('ccLastRecipe'));
+  userDataToPage();
+  updatePage();
 }
 
-function pagedataToRecipe() {
+function saveLastToStorage() {
+  localStorage.setItem('ccLastRecipe', JSON.stringify(userData));
+}
+
+function userDataToPage() {
+  userData.lines.forEach((data) => {
+    let line = lineDiv(data.ts, data.nm, data.kc, data.cb, data.wt, data.ttcb, data.ttkc);
+    container.appendChild(line);
+  });
+  cookedWeightInput.value = userData.cookedWt;
+}
+
+function updateUserData() {
+  function lineTotals(data) {
+    data.ttcb = data.cb * data.wt / 100;
+    data.ttkc = data.kc * data.wt / 100;
+    return data;
+  }
+  function evCalc(str) {
+    str = str.replace(/[^-()\d/*+.]/g, '');
+    let result = str.replace(/[^\d]/g, '');
+    try {
+      result = eval(str);
+      
+    } catch (e) {}
+    if (isNaN(result)) result = 0;
+    return result;
+  }
   let lines = document.querySelectorAll('.line');
-  currentRecipe.cookedWt = cookedWeightInput.value;
-  let arr = [];
+  let linesArr = [];
+  let totcb = 0;
+  let totkc = 0;
+  let totwt = 0;
   lines.forEach((line) => {
-    arr.push(lineToObject(line));
+    let data = {
+      ts: line.dataset.ts,
+      nm: line.querySelector('.productName').value,
+      kc: evCalc(line.querySelector('.calsFor100g').value),
+      cb: evCalc(line.querySelector('.carbsFor100g').value),
+      wt: evCalc(line.querySelector('.weight').value),
+    };
+    data = lineTotals(data);
+    totcb += +data.ttcb;
+    totkc += +data.ttkc;
+    totwt += +data.wt;
+    linesArr.push(data);
   });
-  currentRecipe.lines = arr;
+  userData.lines = linesArr;
+  userData.cookedWt = cookedWeightInput.value;
+  userData.totcb = Math.ceil(totcb);
+  userData.totkc = Math.ceil(totkc);
+  userData.totwt = Math.ceil(totwt);
+  
 }
 
-function lineToObject(line) {
-  let ln = {};
-  ln.nm = line.querySelector('.productName').value;
-  ln.kc = line.querySelector('.calsFor100g').value;
-  ln.cb = line.querySelector('.carbsFor100g').value;
-  ln.wt = line.querySelector('.weight').value;
-  return ln;
-}
-
-function loadRecipeFromStorage(recipeTS) {
-  console.log('from loadRecipeFromStorage');
-  if (typeof recipeTS == 'object'){
-    recipeTS = 'lastRecipe';
-  }
-  let recipe = localStorage.getItem(recipeTS);
-  let lines = JSON.parse(recipe);
-  lines.splice(0, 1);
-  recipe = fromStorageJSONtoObject(recipe);
-  //заповнюємо датасет на сторінці потрібною інфою.
-  Object.keys(recipe.info).forEach(key => resultsData[key.toLowerCase()] = recipe.info[key]);
-  lines.forEach(line => {
-    let div = arrayToLine(line);
-    addNewLineOnPage(div);
+function updatePage() {
+  userData.lines.forEach(line => {
+    updateLine(container.querySelector('[data-ts=' + line.ts + ']'), line);
   });
-  fromDatasetToFields();
-  changeOnPageHandler();
-  console.log(recipe);
-}
-function fromDatasetToFields() {
-  results.querySelector('.cookedWeight').value = results.dataset.cookedweight;
+  allWeightDiv.textContent = userData.totwt;
+  allCalsDiv.textContent =  userData.totkc;
+  allCarbsDiv.textContent = userData.totcb;
 }
 
-function saveLastRecipeToStorage() {
-  let lastRecipe;
-  lastRecipe = importantFieldsFromPage();
-  console.log(lastRecipe);
-  lastRecipe = fromObjectToJSONstorage(lastRecipe);
-  localStorage.setItem('lastRecipe', lastRecipe);
+function updateLine(line, data) {
+    line.querySelector('.totalCarbs').textContent = data.ttcb;
+    line.querySelector('.totalCals').textContent = data.ttkc;
 }
 
-function fromStorageJSONtoObject(json) {
-  let ccLastRecipe = {
-    cookedWt: '',
-    rows: [{
-      nm: '',
-      kc: '',
-      cb: '',
-      wt: '',
-    },],
-  };
-  let recipeObject = {info:{}};
-  let array = JSON.parse(json);
-  recipeObject.info.timestamp = array[0][0] || '';
-  recipeObject.info.recipeName = array[0][1] || '';
-  recipeObject.info.cookedWeight = array[0][2] || '';
-  recipeObject.info.usageCounter = array[0][3] || '';
-  recipeObject.info.lastUsage = array[0][4] || '';
-  recipeObject.info.recipeText = array[0][5] || '';
-  recipeObject.info.calsFor100g = array[0][6] || '';
-  recipeObject.info.carbsFor100g = array[0][7] || '';
-  array.splice(0, 1);
-  array.forEach((line, index) => recipeObject[index] = line);
-  return recipeObject;
+function addNewLine() {
+  container.appendChild(lineDiv(Date.now()));
+  changeHandler();
 }
 
-function fromObjectToJSONstorage(recipeObject) {
-  let json = [[]];
-  //не можемо просто запушити всі існуючі на resultsData елементи, бо нам потрібен чіткий порядок в масиві
-  json[0][0] = recipeObject.info.timestamp || '';
-  json[0][1] = recipeObject.info.recipeName || '';
-  json[0][2] = recipeObject.info.cookedWeight || '';
-  json[0][3] = recipeObject.info.usageCounter || '';
-  json[0][4] = recipeObject.info.lastUsage || '';
-  json[0][5] = recipeObject.info.recipeText || '';
-  json[0][6] = recipeObject.info.calsFor100g || '';
-  json[0][7] = recipeObject.info.carbsFor100g || '';
-  delete recipeObject.info;
-  for (let line in recipeObject) {
-    json.push(recipeObject[line]);
+function removeLine(e) {
+  e.target.closest('.line').remove();
+  changeHandler();
+}
+
+function changeHandler() {
+  updateUserData();
+  updatePage();
+  saveLastToStorage();
+}
+
+function clickHandler(e) {
+  switch (true) {
+    case e.target.parentNode.classList.contains('removeLine'):
+    removeLine(e);
+    break;
   }
-  return JSON.stringify(json);
+  // console.log(e.target.parentNode);
 }
 
-function recipeObjectToPage(recipeObject) {
-  //Заповнює всі потрібні форми з поля інфо, сортує лінії по номеру і ітерує по ним.
-}
-
-// function pageToRecipeObject() {
-//   let recipeObject = {};
-//   // Створюєм об"єкт, заносимо туди всі важливі поля і масиви, вертаємо.
-//   //forEach(lineToArray(div))
-//   console.log(linesLive);
-// }
-
-function importantFieldsFromPage() {
-  let object = {
-    info: {
-      timestamp: resultsData.timestamp || '',
-      cookedWeight: resultsData.cookedweight || '',
-      // recipeName: document.querySelector('.recipeName').value || '',
-      // usageCounter: document.querySelector('.usageCounter').value || '',
-      // lastUsage: document.querySelector('.lastUsage').value || '',
-      // recipeText: document.querySelector('.recipeText').value || '',
-      // calsFor100g: document.querySelector('.calsFor100g').value || '',
-      // carbsFor100g: document.querySelector('.carbsFor100g').value || '',
-    },
-  };
-  Array.from(linesLive).forEach((line, index) => object[index] = lineToArray(line));
-  return object;
-}
-
-function lineToArray(div) {
-  let array = [
-    // div.dataset.number,
-    div.querySelector('.productName').value,
-    div.querySelector('.calsFor100g').value,
-    div.querySelector('.carbsFor100g').value,
-    div.querySelector('.weight').value
-  ];
-  return array;
-}
-
-function arrayToLine(array, div = lineDiv()) {
-  // div.dataset.number = array[0];
-  div.querySelector('.productName').value = array[0];
-  div.querySelector('.calsFor100g').value = array[1];
-  div.querySelector('.carbsFor100g').value = array[2];
-  div.querySelector('.weight').value = array[3];
-  return div;
-}
-
-function loadHistoryRecipies() {
-
-}
-
-//Зберігання рецепту в localStorage.
-function saveRecipeToLocalStorage() {
-
-}
-
-
-//Додавання нової стоки в рецепті на сторінку.
-function addNewLineOnPage(div = lineDiv()) {
-  container.appendChild(div.cloneNode(true));
-}
-
-function removeLineFromPage(div) {
-  div.remove();
-}
-
-function clickOnPageHandler(e) {
-  let classList = e.target.classList;
-  if (classList.contains('new-line')) {
-    let ts = +new Date();
-    let newDiv = lineDiv();
-    newDiv.dataset.number = ts;
-    addNewLineOnPage(newDiv);
-    changeOnPageHandler();
-  } else if (classList.contains('removeLine') || e.target.parentNode.classList.contains('removeLine')) {
-    removeLineFromPage(e.target.closest('.line'));
-  } else if (classList.contains('btn')) {
-
-  }
-}
-
-function changeOnPageHandler(e) {
-  let recipeObject = {info:{}};
-  let allWeight = 0;
-  let allCals = 0;
-  let allCarbs = 0;
-  Array.from(linesLive).forEach((lineDiv, index) => {
-    let array = countUpdateLine(lineDiv);
-    allWeight += +array[3];
-    allCarbs += +array[4];
-    allCals += +array[5];
-    recipeObject[index] = array;
-  });
-  recipeObject.info.allWeight = allWeight.toFixed(1);
-  recipeObject.info.allCarbs = allCarbs.toFixed(1);
-  recipeObject.info.allCals = allCals.toFixed(1);
-  document.querySelector('.allWeight').textContent = allWeight.toFixed(1);
-  document.querySelector('.allCarbs').textContent = allCarbs.toFixed(1);
-  document.querySelector('.allCals').textContent = allCals.toFixed(1);
-
-  saveLastRecipeToStorage();
-}
-
-function countUpdateLine(lineDiv) {
-  let productName = lineDiv.querySelector('.productName').value || '';
-  let calsFor100g = +lineDiv.querySelector('.calsFor100g').value || '';
-  let carbsFor100g = +lineDiv.querySelector('.carbsFor100g').value || '';
-  let weight = +lineDiv.querySelector('.weight').value || '';
-  let totalCarbs = lineDiv.querySelector('.totalCarbs').value || '';
-  let totalCals = lineDiv.querySelector('.totalCals').value || '';
-
-  totalCarbs = +(carbsFor100g * (weight / 100)).toFixed(1);
-  totalCals = +(calsFor100g * (weight / 100)).toFixed(1);
-
-  lineDiv.querySelector('.totalCarbs').textContent = totalCarbs;
-  lineDiv.querySelector('.totalCals').textContent = totalCals;
-  let array = [productName, calsFor100g, carbsFor100g, weight, totalCarbs, totalCals];
-  return array;
-}
-
-
-
-//eventListeners
-// document.querySelector('.new-line').addEventListener('click', addNewLineOnPageHelper);
-document.body.addEventListener('click', clickOnPageHandler);
-document.body.addEventListener('input', changeOnPageHandler);
-// document.body.addEventListener('input', saveLastRecipeToStorage);
-document.addEventListener('DOMContentLoaded', loadRecipeFromStorage);
-// document.body.addEventListener('load', loadLastRecipeFromStorage);
+// //eventListeners
+document.querySelector('.new-line').addEventListener('click', addNewLine);
+document.body.addEventListener('click', clickHandler);
+document.body.addEventListener('input', changeHandler);
+// // document.body.addEventListener('input', saveLastRecipeToStorage);
+document.addEventListener('DOMContentLoaded', loadLastFromStorage);
+// document.addEventListener('load', loadLastFromStorage);
