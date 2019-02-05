@@ -190,6 +190,7 @@ button.menu {
   /* grid-column: 1/4; */
   /* min-width: 330px; */
   width: 600px;
+  font-size: 24px;
 }
 
 .counting2 {

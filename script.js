@@ -6,13 +6,13 @@ const container = document.querySelector('.container');
 let lines = document.querySelectorAll('.line');
 const results = document.querySelector('#results');
 const cookedWeightInput = document.querySelector('.cookedWeight');
-const lineDiv = function (ts= '', nm = '', kc = '', cb = '', wt = '', ttcb = '', ttkc = '') {
+const lineDiv = function (ts = '', nm = '', kc = '', cb = '', wt = '', ttcb = '', ttkc = '') {
   let div = document.createElement('div');
   div.innerHTML =
     `<div class="line" data-ts="${ts}">
-<input class="productName" value="${nm}"/>
-<input class="calsFor100g" value="${kc}"/>
-<input class="carbsFor100g" value="${cb}"/>
+<input class="productName" value="${nm}"type="tel"/>
+<input class="calsFor100g" value="${kc}"type="tel"/>
+<input class="carbsFor100g" value="${cb}"type="tel"/>
 <input class="weight" value="${wt}"/>
 <div class="totalCarbs">${ttcb}</div>
 <div class="totalCals">${ttkc}</div>
@@ -25,7 +25,7 @@ let userData = {};
 let calculations = {};
 
 function loadLastFromStorage() {
-  userData = JSON.parse(localStorage.getItem('ccLastRecipe'));
+  userData = JSON.parse(localStorage.getItem('ccLastRecipe')) || {};
   userDataToPage();
   updatePage();
 }
@@ -35,17 +35,19 @@ function saveLastToStorage() {
 }
 
 function userDataToPage() {
-  userData.lines.forEach((data) => {
-    let line = lineDiv(data.ts, data.nm, data.kc, data.cb, data.wt, data.ttcb, data.ttkc);
-    container.appendChild(line);
-  });
-  cookedWeightInput.value = userData.cookedWt;
+  if (userData.lines) {
+    userData.lines.forEach((data) => {
+      let line = lineDiv(data.ts, data.nm, data.kc, data.cb, data.wt, data.ttcb, data.ttkc);
+      container.appendChild(line);
+    });
+  }
+  cookedWeightInput.value = userData.cookedWt || '';
 }
 
 function updateUserData() {
   function lineTotals(data) {
-    data.ttcb = data.cb * data.wt / 100;
-    data.ttkc = data.kc * data.wt / 100;
+    data.ttcb = (data.cb * data.wt / 100).toFixed(1);
+    data.ttkc = Math.ceil(data.kc * data.wt / 100);
     return data;
   }
   function evCalc(str) {
@@ -53,8 +55,8 @@ function updateUserData() {
     let result = str.replace(/[^\d]/g, '');
     try {
       result = eval(str);
-      
-    } catch (e) {}
+
+    } catch (e) { }
     if (isNaN(result)) result = 0;
     return result;
   }
@@ -79,29 +81,46 @@ function updateUserData() {
   });
   userData.lines = linesArr;
   userData.cookedWt = cookedWeightInput.value;
-  userData.totcb = Math.ceil(totcb);
+  userData.totcb = totcb.toFixed(1);
   userData.totkc = Math.ceil(totkc);
   userData.totwt = Math.ceil(totwt);
-  
+
 }
 
 function updatePage() {
-  userData.lines.forEach(line => {
-    updateLine(container.querySelector('[data-ts=' + line.ts + ']'), line);
-  });
+  if (userData.lines) {
+    userData.lines.forEach(line => {
+      updateLine(container.querySelector('[data-ts="' + line.ts + '"]'), line);
+    });
+  }
   allWeightDiv.textContent = userData.totwt;
-  allCalsDiv.textContent =  userData.totkc;
+  allCalsDiv.textContent = userData.totkc;
   allCarbsDiv.textContent = userData.totcb;
+  resulting();
 }
 
 function updateLine(line, data) {
-    line.querySelector('.totalCarbs').textContent = data.ttcb;
-    line.querySelector('.totalCals').textContent = data.ttkc;
+  line.querySelector('.totalCarbs').textContent = data.ttcb;
+  line.querySelector('.totalCals').textContent = data.ttkc;
+}
+
+function resulting() {
+  let field = document.querySelector('.counting1');
+  let { cookedWt, totkc, totcb } = userData;
+  let kc100 = totkc / cookedWt * 100;
+  let cb100 = totcb / cookedWt * 100;
+  if (!isFinite(kc100)) kc100 = 0;
+  if (!isFinite(cb100)) cb100 = 0;
+  cb100 = cb100.toFixed(1);
+  kc100 = Math.ceil(kc100);
+  field.textContent = `На 100гр:  ${kc100} Ккал,  ${cb100} Карбс`;
 }
 
 function addNewLine() {
-  container.appendChild(lineDiv(Date.now()));
+  let line = lineDiv(Date.now());
+  container.appendChild(line);
   changeHandler();
+  return line;
 }
 
 function removeLine(e) {
@@ -118,10 +137,27 @@ function changeHandler() {
 function clickHandler(e) {
   switch (true) {
     case e.target.parentNode.classList.contains('removeLine'):
-    removeLine(e);
-    break;
+      removeLine(e);
+      break;
   }
-  // console.log(e.target.parentNode);
+}
+
+function keyPressHandler(e) {
+  if (e.keyCode != 13) return;
+  let target = e.target;
+  let parent = target.parentNode;
+  if (parent.classList.contains('line')) {
+    if (target.classList.contains('weight')) {
+      if (parent.nextElementSibling) {
+        parent.nextElementSibling.firstElementChild.focus();
+        return;
+      }
+      let line = addNewLine();
+      line.firstElementChild.focus();
+      return;
+    }
+    target.nextElementSibling.focus();
+  }
 }
 
 // //eventListeners
@@ -130,4 +166,5 @@ document.body.addEventListener('click', clickHandler);
 document.body.addEventListener('input', changeHandler);
 // // document.body.addEventListener('input', saveLastRecipeToStorage);
 document.addEventListener('DOMContentLoaded', loadLastFromStorage);
+document.addEventListener('keyup', keyPressHandler);
 // document.addEventListener('load', loadLastFromStorage);
