@@ -10,10 +10,10 @@ const lineDiv = function (ts = '', nm = '', kc = '', cb = '', wt = '', ttcb = ''
   let div = document.createElement('div');
   div.innerHTML =
     `<div class="line" data-ts="${ts}">
-<input class="productName" value="${nm}"type="tel"/>
+<input class="productName" value="${nm}/>
 <input class="calsFor100g" value="${kc}"type="tel"/>
 <input class="carbsFor100g" value="${cb}"type="tel"/>
-<input class="weight" value="${wt}"/>
+<input class="weight" value="${wt}" "type="tel"/>
 <div class="totalCarbs">${ttcb}</div>
 <div class="totalCals">${ttkc}</div>
 <button class="removeLine"><i class="material-icons mi-clear">clear</i></button>
