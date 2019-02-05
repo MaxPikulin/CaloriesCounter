@@ -10,20 +10,51 @@
 
 <body>
   <div class="container">
-    <div class="line">
+    <div class="head">
       <div class="header">Назва продукту</div>
       <div class="header">Калорійність на 100гр.</div>
       <div class="header">Вуглеводи на 100гр.</div>
       <div class="header">Вага г.</div>
+      <div class="header">Всього карбсів</div>
       <div class="header">Всього калорій</div>
+      <button class="menu"><i class="material-icons mi-menu">menu</i></button>
+      <!-- <div class="header menu"><i class="material-icons mi-menu">menu</i></div> -->
     </div>
-    <div class="line" data-number="3456">
+    <!-- <div class="line" data-number="3456">
       <input class="productName" />
       <input class="calFor100g" />
       <input class="carbsFor100g" />
       <input class="weight" />
       <div class="totalWeight"></div>
       <button class="removeLine"><i class="material-icons mi-clear">clear</i></button>
+    </div> -->
+  </div>
+  <div class="results" id="results" data-cookedweight="567">
+    <div class="resultRow">
+      <div class="resultColumn invisible"></div>
+      <div class="resultColumn invisible"></div>
+      <div class="resultColumn invisible"></div>
+      <div class="resultColumn allWeight"></div>
+      <div class="resultColumn allCarbs"></div>
+      <div class="resultColumn allCals"></div>
+    </div>
+    <div class="resultRow">
+      <div class="resultColumn cookedLabel">Введіть вагу готової страви гр.:</div>
+      <input class="resultColumn cookedWeight dsfields" name="cookedweight" type="tel" />
+    </div>
+    <div class="resultRow">
+      <div class="resultColumn counting1"></div>
+      <button class="invisible resultColumn addAutoWeight btn">Вставити "сиру" вагу</button>
+      <div class="resultColumn invisible"></div>
+      <div class="resultColumn invisible"></div>
+      <div class="resultColumn invisible"></div>
+    </div>
+    <div class="resultRow">
+      <div class="invisible resultColumn counting2"></div>
+      <button class="invisible resultColumn saveRecipe btn">Зберегти рецепт</button>
+      <div class="resultColumn invisible"></div>
+      <div class="resultColumn invisible"></div>
+      <div class="resultColumn invisible"></div>
     </div>
   </div>
   <button class="btn new-line">Додати ряд</button>
