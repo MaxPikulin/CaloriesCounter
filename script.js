@@ -10,9 +10,9 @@ const lineDiv = function (ts = '', nm = '', kc = '', cb = '', wt = '', ttcb = ''
   let div = document.createElement('div');
   div.innerHTML =
     `<div class="line" data-ts="${ts}">
-<input class="productName" value="${nm}/>
-<input class="calsFor100g" value="${kc}"type="tel"/>
-<input class="carbsFor100g" value="${cb}"type="tel"/>
+<input class="productName" value="${nm}"/>
+<input class="calsFor100g" value="${kc}" type="tel"/>
+<input class="carbsFor100g" value="${cb}" type="tel"/>
 <input class="weight" value="${wt}" "type="tel"/>
 <div class="totalCarbs">${ttcb}</div>
 <div class="totalCals">${ttkc}</div>
@@ -80,7 +80,7 @@ function updateUserData() {
     linesArr.push(data);
   });
   userData.lines = linesArr;
-  userData.cookedWt = cookedWeightInput.value;
+  userData.cookedWt = evCalc(cookedWeightInput.value);
   userData.totcb = totcb.toFixed(1);
   userData.totkc = Math.ceil(totkc);
   userData.totwt = Math.ceil(totwt);

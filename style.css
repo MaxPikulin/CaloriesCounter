@@ -117,7 +117,7 @@ body {
 
 .new-line {
   margin-top: 10px;
-  font-size: 2rem;
+  font-size: 2.5rem;
 }
 
 .material-icons {
@@ -191,7 +191,7 @@ button.menu {
   /* grid-column: 1/4; */
   /* min-width: 330px; */
   width: 600px;
-  font-size: 24px;
+  font-size: 26px;
 }
 
 .counting2 {
