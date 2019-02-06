@@ -213,3 +213,6 @@ button.menu {
 .cookedLabel {
   min-width: 160px;
 }
+.productName {
+  text-transform: capitalize;
+}
