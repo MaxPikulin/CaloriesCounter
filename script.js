@@ -13,7 +13,7 @@ const lineDiv = function (ts = '', nm = '', kc = '', cb = '', wt = '', ttcb = ''
 <input class="productName" value="${nm}"/>
 <input class="calsFor100g" value="${kc}" type="tel"/>
 <input class="carbsFor100g" value="${cb}" type="tel"/>
-<input class="weight" value="${wt}" "type="tel"/>
+<input class="weight" value="${wt}" type="tel"/>
 <div class="totalCarbs">${ttcb}</div>
 <div class="totalCals">${ttkc}</div>
 <button class="removeLine"><i class="material-icons mi-clear">clear</i></button>
