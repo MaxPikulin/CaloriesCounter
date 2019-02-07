@@ -26,8 +26,8 @@ body {
 }
 
 .line, .head {
-  display: grid;
   /* border: 1px solid rgba(0, 0, 0, 0); */
+  display: grid;
   border-radius: 3px;
   font-weight: bold;
   grid-template-columns: 2fr 2fr 2fr 2fr 1fr 1fr 50px;
@@ -144,22 +144,28 @@ button.menu {
   grid-template-columns: 100%;
   grid-auto-rows: 48px;
   grid-auto-columns: 100px;
-  /* background-color: aliceblue; */
   grid-row-gap: 3px;
   margin-top: 3px;
+  /* background-color: aliceblue; */
   /* width: fit-content; */
   ;
 }
 
 .resultRow {
-  /* background-color: aquamarine; */
   display: grid;
+  border-radius: 3px;
+  font-weight: bold;
   grid-template-columns: 2fr 2fr 2fr 2fr 1fr 1fr 50px;
   grid-template-rows: auto;
   grid-column-gap: 3px;
+  /* background-color: aquamarine; */
   /* width: fit-content; */
+  /* display: grid;
+  grid-template-columns: 2fr 2fr 2fr 2fr 1fr 1fr 50px;
+  grid-template-rows: auto;
+  grid-column-gap: 3px;
   border-radius: 3px;
-  font-weight: bold;
+  font-weight: bold; */
 }
 
 .resultColumn {
@@ -190,14 +196,14 @@ button.menu {
 .counting1 {
   /* grid-column: 1/4; */
   /* min-width: 330px; */
-  width: 600px;
+  min-width: max-content;
   font-size: 26px;
 }
 
 .counting2 {
   /* grid-column: span 3; */
   /* min-width: 330px; */
-  width: 400px;
+  min-width: 200px;
 }
 
 .invisible {
