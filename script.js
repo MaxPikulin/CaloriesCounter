@@ -1,4 +1,8 @@
 //vars
+const saveRecipeBtn = document.querySelector('.saveRecipe');
+const recipeName = document.querySelector('.recipeName');
+const recipiesList = document.querySelector('.recipiesList');
+const menuBtn = document.querySelector('.menu');
 const allWeightDiv = document.querySelector('.allWeight');
 const allCalsDiv = document.querySelector('.allCals');
 const allCarbsDiv = document.querySelector('.allCarbs');
@@ -23,9 +27,12 @@ const lineDiv = function (ts = '', nm = '', kc = '', cb = '', wt = '', ttcb = ''
 };
 let userData = {};
 let calculations = {};
+let recipies = [];
 
 function loadLastFromStorage() {
   userData = JSON.parse(localStorage.getItem('ccLastRecipe')) || {};
+  recipies = JSON.parse(localStorage.getItem('ccRecipies')) || [];
+  populateRecipiesList(recipies);
   userDataToPage();
   updatePage();
 }
@@ -106,6 +113,11 @@ function updateLine(line, data) {
 
 function resulting() {
   let field = document.querySelector('.counting1');
+  let [cb100, kc100] = calculateResulting(userData);
+  field.textContent = `На 100гр:  ${kc100} Ккал,  ${cb100} Карбс`;
+}
+
+function calculateResulting(userData) {
   let { cookedWt, totkc, totcb } = userData;
   let kc100 = totkc / cookedWt * 100;
   let cb100 = totcb / cookedWt * 100;
@@ -113,7 +125,7 @@ function resulting() {
   if (!isFinite(cb100)) cb100 = 0;
   cb100 = cb100.toFixed(1);
   kc100 = Math.ceil(kc100);
-  field.textContent = `На 100гр:  ${kc100} Ккал,  ${cb100} Карбс`;
+  return [cb100, kc100];
 }
 
 function addNewLine() {
@@ -139,6 +151,12 @@ function clickHandler(e) {
     case e.target.parentNode.classList.contains('removeLine'):
       removeLine(e);
       break;
+    case e.target.classList.contains('saveRecipe'):
+      saveRecipe();
+      break;
+    case e.target.parentNode.classList.contains('menu'):
+      menuHandler();
+      break;
   }
 }
 
@@ -159,6 +177,33 @@ function keyPressHandler(e) {
     target.nextElementSibling.focus();
   }
 }
+
+// Recipe.
+function saveRecipe() {
+  userData.name = recipeName.value;
+  userData.ts = Date.now();
+  recipies = recipies.concat(userData);
+  localStorage.setItem('ccRecipies', JSON.stringify(recipies));
+
+
+
+  console.log(recipies);
+}
+function populateRecipiesList(recipies) {
+  let list = '';
+  for (let i = 0; i < recipies.length; i++) {
+    let [cb100, kc100] = calculateResulting(recipies[i]);
+    list = `<div data-id="${recipies[i].ts}">${recipies[i].name} (${kc100} Ккал, ${cb100} Карбс) - ${new Date(+recipies[i].ts).toLocaleString('en-GB')}</div>` + list;
+  }
+  recipiesList.innerHTML = list;
+  return list;
+}
+
+function menuHandler() {
+  recipiesList.classList.toggle('invisible');
+}
+
+// Recipe end.
 
 // //eventListeners
 document.querySelector('.new-line').addEventListener('click', addNewLine);
