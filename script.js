@@ -55,6 +55,7 @@ function userDataToPage() {
     });
   }
   cookedWeightInput.value = userData.cookedWt || '';
+  wareWeightInput.value = userData.cookware || '';
 }
 
 function updateUserData() {
@@ -94,6 +95,7 @@ function updateUserData() {
   });
   userData.lines = linesArr;
   userData.cookedWt = evCalc(cookedWeightInput.value);
+  userData.cookware = wareWeightInput.value;
   userData.totcb = totcb.toFixed(1);
   userData.totkc = Math.ceil(totkc);
   userData.totwt = Math.ceil(totwt);
@@ -226,7 +228,9 @@ function handleCookware(e) {
     let weight = dlelement.textContent;
     wareWeightInput.value = weight;
   }
+  e.target.blur();
   handleWareWeightChange();
+  changeHandler();
 }
 function handleWareWeightChange() {
   userData.cleanWt = cookedWeightInput.value - wareWeightInput.value;
