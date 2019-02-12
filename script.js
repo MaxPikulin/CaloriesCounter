@@ -10,6 +10,10 @@ const container = document.querySelector('.container');
 let lines = document.querySelectorAll('.line');
 const results = document.querySelector('#results');
 const cookedWeightInput = document.querySelector('.cookedWeight');
+const cookwareInput = document.querySelector('.cookware');
+const cookwareData = document.querySelector('#cookware');
+const wareWeightInput = document.querySelector('.wareWeight');
+const addWareBtn = document.querySelector('.addWare');
 const lineDiv = function (ts = '', nm = '', kc = '', cb = '', wt = '', ttcb = '', ttkc = '') {
   let div = document.createElement('div');
   div.innerHTML =
@@ -34,7 +38,9 @@ function loadLastFromStorage() {
   recipies = JSON.parse(localStorage.getItem('ccRecipies')) || [];
   populateRecipiesList(recipies);
   userDataToPage();
+  handleWareWeightChange();
   updatePage();
+  fillDatalist();
 }
 
 function saveLastToStorage() {
@@ -114,13 +120,13 @@ function updateLine(line, data) {
 function resulting() {
   let field = document.querySelector('.counting1');
   let [cb100, kc100] = calculateResulting(userData);
-  field.textContent = `На 100гр:  ${kc100} Ккал,  ${cb100} Карбс`;
+  field.textContent = `На 100гр:  ${kc100} Ккал,  ${cb100} Карбс. (чиста вага ${userData.cleanWt}гр.)`;
 }
 
 function calculateResulting(userData) {
-  let { cookedWt, totkc, totcb } = userData;
-  let kc100 = totkc / cookedWt * 100;
-  let cb100 = totcb / cookedWt * 100;
+  let { cleanWt, totkc, totcb } = userData;
+  let kc100 = totkc / cleanWt * 100;
+  let cb100 = totcb / cleanWt * 100;
   if (!isFinite(kc100)) kc100 = 0;
   if (!isFinite(cb100)) cb100 = 0;
   cb100 = cb100.toFixed(1);
@@ -142,7 +148,9 @@ function removeLine(e) {
 
 function changeHandler() {
   updateUserData();
+  fillDatalist();
   updatePage();
+  handleWareWeightChange();
   saveLastToStorage();
 }
 
@@ -205,6 +213,50 @@ function menuHandler() {
 
 // Recipe end.
 
+// Cookware
+function handleCookware(e) {
+  let value = e.target.value;
+  if (!value) {
+    // wareWeightInput.value = '';
+    return;
+  }
+  let options = [...cookwareData.children];
+  let dlelement = options.find(v => v.value === value);
+  if (dlelement) {
+    let weight = dlelement.textContent;
+    wareWeightInput.value = weight;
+  }
+  handleWareWeightChange();
+}
+function handleWareWeightChange() {
+  userData.cleanWt = cookedWeightInput.value - wareWeightInput.value;
+  resulting();
+}
+
+function handleAddWare(e) {
+  // console.log(e);
+  userData.cookWare = userData.cookWare || [];
+  let value = cookwareInput.value;
+  console.log(value);
+  userData.cookWare.push([cookwareInput.value, wareWeightInput.value]);
+  changeHandler();
+}
+
+function fillDatalist() {
+  let data = userData.cookWare;
+  let datalist = '';
+  for (let i = 0; i < data.length; i++) {
+    let [name, value] = data[i];
+    // let {}
+    datalist += `<option value="${name}">${value}</option>`;
+  }
+  cookwareData.innerHTML = datalist;
+}
+
+
+// Cookware end.
+
+
 // //eventListeners
 document.querySelector('.new-line').addEventListener('click', addNewLine);
 document.body.addEventListener('click', clickHandler);
@@ -213,3 +265,7 @@ document.body.addEventListener('input', changeHandler);
 document.addEventListener('DOMContentLoaded', loadLastFromStorage);
 document.addEventListener('keyup', keyPressHandler);
 // document.addEventListener('load', loadLastFromStorage);
+cookwareInput.addEventListener('change', handleCookware);
+addWareBtn.addEventListener('click', handleAddWare);
+wareWeightInput.addEventListener('keyup', handleWareWeightChange);
+// cookwareInput.addEventListener('select', handleCookware);
