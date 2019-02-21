@@ -233,7 +233,7 @@ function handleCookware(e) {
   changeHandler();
 }
 function handleWareWeightChange() {
-  userData.cleanWt = userData.cookedWt - wareWeightInput.value;
+  userData.cleanWt = userData.cookedWt - (wareWeightInput.value || 0);
   resulting();
 }
 
