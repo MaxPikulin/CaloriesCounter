@@ -247,7 +247,7 @@ function handleAddWare(e) {
 }
 
 function fillDatalist() {
-  let data = userData.cookWare;
+  let data = userData.cookWare || [];
   let datalist = '';
   for (let i = 0; i < data.length; i++) {
     let [name, value] = data[i];
